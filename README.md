@@ -1,8 +1,8 @@
 # Gesture Music Controller
 
-ควบคุม Spotify แบบไม่ต้องแตะเครื่อง ด้วยท่ามือที่ตรวจจับผ่านกล้อง ESP32-CAM — ใช้ OpenCV และ MediaPipe อ่านท่าทางมือ แล้วส่งคำสั่งไปที่ Spotify Web API แบบเรียลไทม์
+A touchless Spotify controller driven by hand gestures, detected through an ESP32-CAM. OpenCV and MediaPipe read the hand gestures in real time and translate them into Spotify Web API commands.
 
-รายงานฉบับเต็ม: [`iot project.pdf`](iot%20project.pdf)
+Full project report: [`iot project.pdf`](iot%20project.pdf)
 
 ## 🏗️ Architecture
 
@@ -13,28 +13,28 @@ ESP32-CAM  --(MJPEG stream over Wi-Fi)-->  Python (OpenCV + MediaPipe)  --(Spoti
 Arduino Uno + Ultrasonic Sensor (u100)
 ```
 
-## 📂 โครงสร้าง Repo
+## 📂 Repo Structure
 
-| โฟลเดอร์ | รายละเอียด |
+| Folder | Description |
 |---|---|
-| [`project/gesture_spotify/`](project/gesture_spotify) | แอป Python หลัก — ตรวจจับท่ามือและควบคุม Spotify ดูวิธีติดตั้ง/รันได้ที่ [README ของโฟลเดอร์นี้](project/gesture_spotify/README.md) |
-| [`project/esp32cam/`](project/esp32cam) | Firmware (Arduino/.ino) สำหรับ ESP32-CAM — สตรีมวิดีโอผ่าน Wi-Fi ให้ฝั่ง Python อ่าน |
-| [`project/u100/`](project/u100) | Sketch สำหรับ Arduino Uno + เซนเซอร์วัดระยะอัลตราโซนิก |
+| [`project/gesture_spotify/`](project/gesture_spotify) | Main Python app — detects hand gestures and controls Spotify. See its own [README](project/gesture_spotify/README.md) for setup/run instructions |
+| [`project/esp32cam/`](project/esp32cam) | Firmware (Arduino/.ino) for the ESP32-CAM — streams video over Wi-Fi for the Python app to read |
+| [`project/u100/`](project/u100) | Sketch for the Arduino Uno + ultrasonic distance sensor |
 
-## 🚀 เริ่มต้นใช้งาน
+## 🚀 Getting Started
 
-1. **ESP32-CAM**: เปิด `project/esp32cam/esp32cam.ino` ด้วย Arduino IDE, คัดลอก `secrets.h.example` เป็น `secrets.h` แล้วใส่ WiFi SSID/Password ของคุณ, อัปโหลดขึ้นบอร์ด
-2. **Arduino Uno (ไม่บังคับ)**: อัปโหลด `project/u100/u100.ino` ถ้าต้องการใช้เซนเซอร์วัดระยะร่วมด้วย
-3. **Python**: เข้าไปที่ [`project/gesture_spotify/`](project/gesture_spotify) แล้วทำตาม [README](project/gesture_spotify/README.md) — ติดตั้ง dependencies, ตั้งค่า `.env`, แล้วรัน `python main.py`
+1. **ESP32-CAM**: Open `project/esp32cam/esp32cam.ino` in the Arduino IDE, copy `secrets.h.example` to `secrets.h` and fill in your Wi-Fi SSID/password, then upload it to the board
+2. **Arduino Uno (optional)**: Upload `project/u100/u100.ino` if you want to use the ultrasonic distance sensor as well
+3. **Python**: Go to [`project/gesture_spotify/`](project/gesture_spotify) and follow its [README](project/gesture_spotify/README.md) — install dependencies, set up `.env`, then run `python main.py`
 
 ## 🎥 Demo
 
-ดูตัวอย่างการทำงานได้ในรายงาน [`iot project.pdf`](iot%20project.pdf) (หน้า Photos & Evidence และ App page)
+See it in action in the report [`iot project.pdf`](iot%20project.pdf) (Photos & Evidence and App page sections)
 
-## ✨ ผลทดสอบ
+## ✨ Results
 
-~19–20 FPS, ~340 ms median latency, ~94% accuracy ภายใต้แสงปกติ
+~19–20 FPS, ~340 ms median latency, ~94% accuracy under normal lighting
 
-## 👤 ผู้จัดทำ
+## 👤 Author
 
 Chanagun Khunphet — [github.com/kaitidfun](https://github.com/kaitidfun)

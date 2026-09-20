@@ -1,75 +1,75 @@
 # Gesture Spotify Control
 
-ควบคุม Spotify ด้วยท่ามือผ่านกล้อง ESP32-CAM
+Control Spotify with hand gestures via an ESP32-CAM.
 
-## 🏗️ โครงสร้างโปรเจกต์
+## 🏗️ Project Structure
 
 ```
 gesture_spotify/
-├── main.py                # Entry point — รันไฟล์นี้
-├── config.py               # โหลดค่าตั้งค่า/secret จาก .env
-├── gesture.py               # enum ของท่ามือที่รองรับ (Gesture)
-├── gesture_detector.py       # ตรวจจับมือด้วย MediaPipe และแปลงเป็นท่ามือ
-├── spotify_controller.py     # เรียก Spotify Web API ผ่าน spotipy
-├── ui_renderer.py            # วาด overlay/สถานะบนหน้าต่างวิดีโอ
+├── main.py                # Entry point — run this file
+├── config.py               # Loads settings/secrets from .env
+├── gesture.py               # Enum of supported gestures (Gesture)
+├── gesture_detector.py       # Detects hands with MediaPipe and maps them to a gesture
+├── spotify_controller.py     # Calls the Spotify Web API via spotipy
+├── ui_renderer.py            # Draws overlays/status on the video window
 ├── requirements.txt
-├── .env                      # ค่าจริง (ไม่ commit ขึ้น git)
-└── .env.example               # เทมเพลตให้ก็อปไปทำ .env
+├── .env                      # Real secrets (not committed to git)
+└── .env.example               # Template to copy into .env
 ```
 
-## 🎯 ท่ามือที่รองรับ
+## 🎯 Supported Gestures
 
-| ท่ามือ | คำสั่ง |
+| Gesture | Command |
 |--------|--------|
-| 🖐️🖐️ แบมือ 2 ข้าง | เข้าสู่โหมด Ready |
-| 🖐️✊ ซ้ายแบ + ขวากำ | เพลงถัดไป |
-| ✊🖐️ ซ้ายกำ + ขวาแบ | เพลงก่อนหน้า |
-| ✊✊ กำมือ 2 ข้าง (ค้าง ~0.3 วิ) | Play / Pause |
-| ✊ กำมือข้างเดียว + เลื่อนขึ้น-ลง | พรีวิวปรับระดับเสียง |
-| ✊ กำมือข้างเดียว + เลื่อนซ้าย-ขวา | พรีวิว seek ตำแหน่งเพลง |
-| 🖐️ แบมือ (หลังพรีวิว) | ยืนยันส่งค่าไป Spotify |
+| 🖐️🖐️ Both hands open | Enter Ready mode |
+| 🖐️✊ Left open + right fist | Next track |
+| ✊🖐️ Left fist + right open | Previous track |
+| ✊✊ Both hands fist (hold ~0.3s) | Play / Pause |
+| ✊ One fist + move up/down | Preview volume level |
+| ✊ One fist + move left/right | Preview seek position |
+| 🖐️ Open hand (after preview) | Commit the value to Spotify |
 
-## 🚀 วิธีใช้งาน
+## 🚀 How to Run
 
-1. **ติดตั้ง dependencies**:
+1. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **ตั้งค่า** - คัดลอก `.env.example` เป็น `.env` แล้วใส่ค่าจริงของคุณ:
+2. **Configure** — copy `.env.example` to `.env` and fill in your real values:
    ```
    ESP32_URL=http://YOUR_ESP32_IP:81/stream
    SPOTIFY_CLIENT_ID=your_spotify_client_id
    SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
    SPOTIFY_REDIRECT_URI=http://127.0.0.1:8888/callback
    ```
-   ไฟล์ `.env` จะไม่ถูก commit ขึ้น git (อยู่ใน `.gitignore` แล้ว)
+   The `.env` file is not committed to git (already in `.gitignore`)
 
-3. **รันโปรแกรม**:
+3. **Run the app**:
    ```bash
    python main.py
    ```
 
-4. **ควบคุมด้วยท่ามือ** - ทำท่ามือหน้ากล้อง
-5. **ออกจากโปรแกรม** - กด `q`
+4. **Control with gestures** — perform gestures in front of the camera
+5. **Quit** — press `q`
 
-## ➕ วิธีเพิ่มท่ามือใหม่
+## ➕ Adding a New Gesture
 
-1. เพิ่มค่าใหม่ใน enum ที่ [`gesture.py`](gesture.py) เช่น `PEACE = "peace"`
-2. เขียน logic ตรวจจับท่าทางนั้นใน [`gesture_detector.py`](gesture_detector.py) — ดูตัวอย่างจาก `is_hand_open()` / `is_hand_closed()` / `detect_two_hand_gesture()` เป็นแนวทาง แล้วให้ `detect_gesture()` คืนค่า enum ใหม่ตามเงื่อนไข
-3. จัดการคำสั่งเมื่อเจอท่านั้นใน `handle_gesture()` ที่ [`main.py`](main.py) โดยเรียกเมธอดที่ต้องการจาก [`spotify_controller.py`](spotify_controller.py)
+1. Add a new value to the enum in [`gesture.py`](gesture.py), e.g. `PEACE = "peace"`
+2. Write detection logic for that gesture in [`gesture_detector.py`](gesture_detector.py) — use `is_hand_open()` / `is_hand_closed()` / `detect_two_hand_gesture()` as a reference, and have `detect_gesture()` return the new enum value under the right condition
+3. Handle the command when that gesture is detected in `handle_gesture()` inside [`main.py`](main.py), calling the method you need from [`spotify_controller.py`](spotify_controller.py)
 
 ## 📦 Dependencies
 
-ดูรายการเต็มได้ที่ [`requirements.txt`](requirements.txt):
+See the full list in [`requirements.txt`](requirements.txt):
 
 - opencv-python
 - mediapipe
 - spotipy
 - python-dotenv
 
-## ✨ ข้อดี
+## ✨ Highlights
 
-✅ แยกไฟล์ตามหน้าที่ชัดเจน (detection / control / UI / config)  
-✅ Secret แยกออกจากโค้ด ปลอดภัยเวลา push ขึ้น git  
-✅ Code อ่านง่าย เข้าใจง่าย
+✅ Files are split cleanly by responsibility (detection / control / UI / config)
+✅ Secrets are kept out of the source code — safe to push to git
+✅ Readable, straightforward code
