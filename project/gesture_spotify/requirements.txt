@@ -1,0 +1,4 @@
+opencv-python
+mediapipe
+spotipy
+python-dotenv

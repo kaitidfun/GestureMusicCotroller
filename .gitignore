@@ -1,0 +1,13 @@
+# Secrets
+.env
+**/secrets.h
+project/gesture_spotify/.cache
+project/gesture_spotify/spotify_api.txt
+
+# Python
+__pycache__/
+*.pyc
+
+# Arduino build artifacts
+build/
+*.hex
